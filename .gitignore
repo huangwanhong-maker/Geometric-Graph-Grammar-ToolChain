@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local outputs
+*.png
+!docs/**/*.png
+!assets/**/*.png
+
+# Generated grammars / analysis reports (keep curated examples under fixtures/expected/)
+*.ggg.json
+*.report.json
+!fixtures/expected/*.ggg.json

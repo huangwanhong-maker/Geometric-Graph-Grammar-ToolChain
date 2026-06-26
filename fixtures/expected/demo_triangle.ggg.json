@@ -1,0 +1,131 @@
+{
+  "format": "ggg-2d",
+  "version": 1,
+  "dimension": 2,
+  "transform_class": "similarity",
+  "axiom": null,
+  "rules": [
+    {
+      "id": 0,
+      "level": 0,
+      "frequency": 7,
+      "lhs": {
+        "symbol": "A"
+      },
+      "rhs": {
+        "vertices": [
+          {
+            "id": 0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          {
+            "id": 1,
+            "x": 1.0,
+            "y": 0.0
+          },
+          {
+            "id": 2,
+            "x": 0.0,
+            "y": 1.0
+          }
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      },
+      "embedding": [
+        {
+          "vertex": 0,
+          "transform": {
+            "linear": [
+              [
+                6.123233995736766e-17,
+                -1.0
+              ],
+              [
+                1.0,
+                6.123233995736766e-17
+              ]
+            ],
+            "translation": [
+              0.0,
+              0.0
+            ]
+          },
+          "connections": [
+            [
+              -1.0,
+              0.0
+            ]
+          ]
+        },
+        {
+          "vertex": 1,
+          "transform": {
+            "linear": [
+              [
+                0.5,
+                -0.0
+              ],
+              [
+                0.0,
+                0.5
+              ]
+            ],
+            "translation": [
+              0.0,
+              0.0
+            ]
+          },
+          "connections": [
+            [
+              0.0,
+              1.0
+            ]
+          ]
+        },
+        {
+          "vertex": 2,
+          "transform": {
+            "linear": [
+              [
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0
+              ]
+            ],
+            "translation": [
+              0.0,
+              0.0
+            ]
+          },
+          "connections": [
+            [
+              0.0,
+              -1.0
+            ],
+            [
+              -1.0,
+              0.0
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}
