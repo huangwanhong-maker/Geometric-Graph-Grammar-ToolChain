@@ -34,6 +34,7 @@ See [../../../docs/ALGORITHM_NOTES.md](../../../docs/ALGORITHM_NOTES.md) for the
 | `g3_2d/learn.py` | inverse-modeling driver (detect→select→encode→rewrite) | ✅ done |
 | `g3_2d/forward.py` | forward generator (grammar → graph, fractals) | ✅ done |
 | `g3_2d/examples.py` | example grammars (Sierpinski triangle, paper Fig. 12) | ✅ done |
+| `g3_2d/parse.py` | syntax analysis: parse a geometry against a grammar + reconstruct | ✅ done |
 
 The **output artifact** of learning is a `*.ggg.json` grammar file (one production rule `q → S / B`
 per learned isogroup, with the world `occurrences` of each rule recorded). See
@@ -70,6 +71,24 @@ python -m g3_2d.examples sierpinski -n 6 -o sierpinski.png
 
 In code, `generate(grammar, iterations)` takes a `ForwardGrammar` (axiom modules + productions +
 per-symbol terminal shapes) and returns a `GeometricGraph`. See `g3_2d/examples.py:sierpinski`.
+
+## Syntax analysis (parse a geometry against a grammar)
+
+The recognition counterpart of learning: given a geometry **and** a grammar, reduce the geometry by
+the grammar's rules, recording the **derivation** (which rule fired where, in what order). Replaying
+the derivation in reverse regenerates the geometry exactly.
+
+```sh
+# learn a grammar, then analyze the geometry with it: process + per-step PNGs + JSON + reconstruction
+python -m g3_2d <graph.json> -o g.ggg.json --max-order 4 --prefer dense --quiet
+python -m g3_2d.parse <graph.json> g.ggg.json \
+    --steps-dir steps/ --record trace.json --reconstruct rebuilt.png
+```
+
+This prints the step-by-step derivation, writes one PNG per reduction step (occurrences colour-coded)
+plus `reduced_axiom.png`, saves the derivation as JSON, and reconstructs the geometry (reporting
+whether it matches the input). In code: `parse(graph, grammar)` → `ParseResult` (steps + reduced
+graph), and `reconstruct(result)` → `GeometricGraph`.
 
 ## Setup
 

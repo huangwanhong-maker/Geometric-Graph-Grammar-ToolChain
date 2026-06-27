@@ -11,17 +11,19 @@ from __future__ import annotations
 from .expansion import ExpansionParams, expand_isogroup
 from .graph import GeometricGraph
 from .isogroup import Isogroup, Occurrence
-from .isomorphism import canonical_form
+from .isomorphism import DEFAULT_QUANT, canonical_form
 
 
-def _seed_from_edges(graph: GeometricGraph) -> Isogroup | None:
+def _seed_from_edges(graph: GeometricGraph, quant: float) -> Isogroup | None:
     """The Order-2 isogroup: every edge is an occurrence (all edges are isomorphic)."""
     edges = graph.edges()
     if not edges:
         return None
     occurrences: list[Occurrence] = [frozenset(e) for e in edges]
     pattern = graph.induced_subgraph(edges[0])
-    return Isogroup(key=canonical_form(pattern).key, pattern=pattern, occurrences=occurrences)
+    return Isogroup(
+        key=canonical_form(pattern, quant=quant).key, pattern=pattern, occurrences=occurrences
+    )
 
 
 def _merge_by_key(groups: list[Isogroup]) -> list[Isogroup]:
@@ -54,6 +56,7 @@ def detect_isogroups(
     max_order: int | None = None,
     min_frequency: int = 2,
     frequency_cut: float = 0.0,
+    quant: float = DEFAULT_QUANT,
     params: ExpansionParams | None = None,
     seed: Isogroup | None = None,
 ) -> list[Isogroup]:
@@ -61,11 +64,13 @@ def detect_isogroups(
 
     ``frequency_cut`` is the fraction of least-frequent isogroups discarded each round (the paper
     uses ~0.8 for speed; default 0.0 = full analysis = ground truth). ``min_frequency`` is the
-    minimum repetition count to keep a pattern. With ``seed`` you can start from a user-defined
-    subgraph instead of a single edge (user-assisted learning).
+    minimum repetition count to keep a pattern. ``quant`` is the geometric similarity tolerance (the
+    quantization step in units where a reference edge has length 1; larger = looser matching, so
+    approximately-similar structures - e.g. organic settlements - are grouped together). With
+    ``seed`` you can start from a user-defined subgraph instead of a single edge.
     """
-    params = params or ExpansionParams(min_frequency=min_frequency)
-    start = seed or _seed_from_edges(graph)
+    params = params or ExpansionParams(min_frequency=min_frequency, quant=quant)
+    start = seed or _seed_from_edges(graph, params.quant)
     if start is None or start.frequency < min_frequency:
         return []
 

@@ -27,3 +27,7 @@ Thumbs.db
 *.ggg.json
 *.report.json
 !fixtures/expected/*.ggg.json
+
+# Loose data / trace outputs dropped in the package working dir
+src/g3-2d/python/*.json
+trace.json

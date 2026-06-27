@@ -25,6 +25,7 @@ from .grammar import EmbeddingEntry, Grammar, Occurrence, Rule
 from .graph import GeometricGraph
 from .isogroup import Isogroup
 from .learn import learn
+from .parse import ParseResult, parse, reconstruct
 from .selection import best_rule, non_overlapping_subset, select_isogroup
 
 __all__ = [
@@ -45,6 +46,9 @@ __all__ = [
     "non_overlapping_subset",
     "encode_rule",
     "learn",
+    "parse",
+    "reconstruct",
+    "ParseResult",
     "ForwardGrammar",
     "Production",
     "generate",

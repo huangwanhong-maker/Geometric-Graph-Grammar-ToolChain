@@ -1,0 +1,12 @@
+# Treat images and other binaries as binary (no line-ending normalization)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+
+# Normalize text to LF in the repo
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf

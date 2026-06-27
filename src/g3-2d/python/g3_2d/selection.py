@@ -36,7 +36,7 @@ def select_isogroup(
 
 
 def best_rule(
-    isogroups: Sequence[Isogroup], *, min_cover: int = 2, prefer: str = "gain"
+    isogroups: Sequence[Isogroup], *, min_cover: int = 2, prefer: str = "gain", min_order: int = 2,
 ) -> tuple[Isogroup, list[Occurrence]] | None:
     """Pick the isogroup + non-overlapping cover to encode next.
 
@@ -50,12 +50,14 @@ def best_rule(
       makes the learner encode *cycles* - unit squares on a grid, triangles on a Sierpinski gasket -
       which is usually what you want for shape-structured inputs.
 
-    Returns ``None`` if nothing clears ``min_cover`` simultaneously-replaceable occurrences.
+    ``min_order`` skips patterns smaller than the given size - set it to 3 to ignore the trivial
+    single-edge rule and learn real multi-vertex structural motifs. Returns ``None`` if nothing
+    clears ``min_cover`` simultaneously-replaceable occurrences.
     """
     best: tuple[Isogroup, list[Occurrence]] | None = None
     best_key: tuple | None = None
     for iso in isogroups:
-        if iso.order < 2 or iso.frequency < min_cover:
+        if iso.order < min_order or iso.frequency < min_cover:
             continue
         cover = non_overlapping_subset(iso.occurrences)
         if len(cover) < min_cover:

@@ -75,7 +75,17 @@ def draw_graph(
         if label_nodes:
             ax.annotate(str(v), (p[0], p[1]), textcoords="offset points", xytext=(4, 4), fontsize=8)
 
-    ax.set_aspect("equal", adjustable="datalim")
+    # Explicit, padded limits so even a single node (e.g. a fully-reduced axiom) stays visible;
+    # a lone point or a collinear set has zero extent and would otherwise render blank.
+    if g.num_vertices:
+        pts = g.positions(g.vertices())
+        (xmin, ymin), (xmax, ymax) = pts.min(axis=0), pts.max(axis=0)
+        span = max(xmax - xmin, ymax - ymin)
+        pad = 0.1 * span if span > 0 else 1.0
+        ax.set_xlim(xmin - pad, xmax + pad)
+        ax.set_ylim(ymin - pad, ymax + pad)
+
+    ax.set_aspect("equal")
     ax.axis("off")
     return ax
 
@@ -96,6 +106,8 @@ def _main(argv: list[str] | None = None) -> int:
     parser.add_argument("graph", help="path to a graph JSON file")
     parser.add_argument("-o", "--out", help="output PNG path (omit to show interactively)")
     parser.add_argument("--labels", action="store_true", help="annotate vertex ids")
+    parser.add_argument("--node-size", type=float, default=40.0,
+                        help="vertex marker size (use ~4 for large/dense maps)")
     parser.add_argument(
         "--groups", nargs="*", default=None,
         help="space-separated vertex groups, each comma-separated, e.g. 0,1,2 3,4,5",
@@ -108,11 +120,11 @@ def _main(argv: list[str] | None = None) -> int:
         if args.groups else None
     )
     if args.out:
-        save_png(g, args.out, groups=groups, label_nodes=args.labels)
+        save_png(g, args.out, groups=groups, label_nodes=args.labels, node_size=args.node_size)
         print(f"wrote {args.out}")
     else:
         plt = _require_mpl()
-        draw_graph(g, groups=groups, label_nodes=args.labels)
+        draw_graph(g, groups=groups, label_nodes=args.labels, node_size=args.node_size)
         plt.show()
     return 0
 
