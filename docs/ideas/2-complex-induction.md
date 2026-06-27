@@ -3,6 +3,8 @@
 > **Status:** conjecture / future work. NOT implemented. We implement the paper's graph-based
 > algorithm first (see [../ALGORITHM_NOTES.md](../ALGORITHM_NOTES.md)).
 > **Origin:** Wanhong HUANG, 2026-06-26.
+> **See also:** [higher-dimensional-grammar.md](higher-dimensional-grammar.md) — the forward-looking
+> plan (2-simplices as generative primitive, the gluing ladder, roadmap, and physics bridge).
 
 ## The seed idea (as stated)
 

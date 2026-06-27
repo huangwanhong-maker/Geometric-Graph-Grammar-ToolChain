@@ -6,3 +6,6 @@ where we might go beyond it.
 
 - [2-complex-based induction](2-complex-induction.md) — generalizing induction from graphs
   (1-complexes) to simplicial 2-complexes, and a conjecture that m-D induction reduces to 2D.
+- [Higher-dimensional grammar plan](higher-dimensional-grammar.md) — 2-simplices as the generative
+  primitive, the gluing ladder to arbitrary dimension, a roadmap, and a bridge to simplicial physics
+  (spin foams, CDT, Regge calculus; production rules ↔ Pachner moves).
