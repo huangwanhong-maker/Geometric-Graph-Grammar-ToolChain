@@ -259,6 +259,16 @@ and built first, beginning with the Python implementation; the others follow.
 - **2D C++, 3D Python, 3D C++** — planned; the 2D-Python module and shared `fixtures/` are the
   specification they validate against.
 
+## Beyond graphs — higher-dimensional grammars (planned)
+
+A research direction takes the **2-simplex (triangle)** as the *generative primitive* and climbs
+dimension by gluing (`k`-simplices → `(k+1)`-simplices), aiming at one dimension-agnostic engine, plus
+a conjecture that `m`-D induction reduces to repeated 2-complex problems. It also bridges to
+**simplicial physics** — spin foams are labeled 2-complexes, and production rules correspond to
+Pachner moves (cf. CDT, Regge calculus, tensor models). See
+[docs/ideas/higher-dimensional-grammar.md](docs/ideas/higher-dimensional-grammar.md) (plan; not yet
+implemented — the paper's 1-complex algorithm is built first).
+
 ## License
 
 [MIT](LICENSE) — Copyright © 2026 Serendip Commons Society. See [CONTRIBUTORS.md](CONTRIBUTORS.md).
