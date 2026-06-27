@@ -35,6 +35,8 @@ See [../../../docs/ALGORITHM_NOTES.md](../../../docs/ALGORITHM_NOTES.md) for the
 | `g3_2d/forward.py` | forward generator (grammar → graph, fractals) | ✅ done |
 | `g3_2d/examples.py` | example grammars (Sierpinski triangle, paper Fig. 12) | ✅ done |
 | `g3_2d/parse.py` | syntax analysis: parse a geometry against a grammar + reconstruct | ✅ done |
+| `g3_2d/osm.py` | import OpenStreetMap road/path networks (real-world maps) | ✅ done |
+| `g3_2d/eeg.py` | EEG phase-space reconstruction → 2D trajectory graph | ✅ done |
 
 The **output artifact** of learning is a `*.ggg.json` grammar file (one production rule `q → S / B`
 per learned isogroup, with the world `occurrences` of each rule recorded). See

@@ -163,6 +163,76 @@ remains (`322 → 170 → 86 → 45 → 23 → 12 → 6 → 3 → 2 → 1`):
 > `marrakesh-medina`, `accra-jamestown`, `kumasi-centre`, plus `barcelona-eixample` and
 > `manhattan-midtown`; or pass any `--bbox S W N E`.
 
+## Time series — EEG phase-space reconstruction
+
+A geometric graph doesn't have to be a map. A scalar **time series** becomes 2D geometry through
+**phase-space reconstruction** (Takens time-delay embedding): plot each sample against a delayed
+copy, `P[i] = (x[i], x[i+τ])`, and join consecutive points into a trajectory. The shape of that
+trajectory is the signal's attractor — and recurring waveform patterns become recurring loops,
+exactly the repeated structure the grammar detects.
+
+We use a **real EEG channel** (PhysioNet EEG Motor Movement/Imagery DB; eyes-closed, occipital
+electrode **Oz**) band-passed to **4–30 Hz** — the main brain rhythms (theta + alpha + beta), which
+is more faithful than isolating a single rhythm: the attractor keeps the alpha loops *and* the finer
+structure beta/theta add. The result is a 500-point 2D trajectory.
+
+### Pipeline (EEG → PSR → preprocess → learn → analyze each step)
+
+```sh
+# 1) one EEG channel -> 2D phase-space trajectory graph (real data; --band is the preprocessing)
+python -m g3_2d.eeg --channel 61 --band 4 30 --tau 4 --count 500 -o eeg.json
+
+# 2) visualize the geometry (the attractor)
+python -m g3_2d.viz eeg.json -o eeg_attractor.png --node-size 4
+
+# 3) induce a grammar (hierarchical; --report writes the analysis)
+python -m g3_2d eeg.json -o eeg.ggg.json --tolerance 0.2 --max-levels 14 --report eeg.report.json
+
+# 4) syntax-analyze: visualize EACH step + reconstruct
+python -m g3_2d.parse eeg.json eeg.ggg.json --tolerance 0.2 \
+    --steps-dir steps/ --node-size 6 --reconstruct rebuilt.png --record eeg_trace.json
+```
+`--source synthetic` runs the whole thing offline on a generated EEG-like signal; `--band` (e.g.
+`8 13` alpha, `13 30` beta), `--tau`, `--channel`, `--count`, `--start` are all tunable.
+
+### The attractor and its recurring motif
+
+Because our isomorphism is **scale-invariant**, loops of different amplitude are the *same* shape,
+so the learner finds a recurring order-3 arc motif and color-codes its occurrences (here it repeats
+**32×** across the attractor — far fewer than a pure-alpha signal would, because the broadband
+trajectory is genuinely more varied):
+
+| 2D phase-space attractor (EEG Oz, 4–30 Hz) | Learned recurring motif (32 arcs) |
+|:---:|:---:|
+| ![EEG attractor](assets/eeg_attractor.png) | ![EEG motif](assets/eeg_motif.png) |
+
+### Syntax analysis, step by step
+
+The hierarchical grammar then reduces the whole 500-point trajectory to a single node in 9 steps,
+roughly **halving** it each step (`500 → 250 → 125 → 63 → 32 → 16 → 8 → 4 → 2 → 1`):
+
+| | | |
+|:---:|:---:|:---:|
+| ![](assets/eeg_step0.png) | ![](assets/eeg_step1.png) | ![](assets/eeg_step2.png) |
+| step 0: 500 → 250 | step 1: 250 → 125 | step 2: 125 → 63 |
+| ![](assets/eeg_step3.png) | ![](assets/eeg_step4.png) | ![](assets/eeg_step5.png) |
+| step 3: 63 → 32 | step 4: 32 → 16 | step 5: 16 → 8 |
+| ![](assets/eeg_step6.png) | ![](assets/eeg_step7.png) | ![](assets/eeg_axiom.png) |
+| step 6: 8 → 4 | steps 7–8: → 1 | reduced axiom (1 node) |
+
+**How to read it** (same convention as the map demo): gray = the phase-space trajectory at that
+point (dots = embedded points, lines = successive time steps); **each colour = one occurrence merged
+into a single node this step**; across steps the attractor coarsens while keeping its looped shape.
+Replaying the derivation reconstructs the original trajectory **exactly** (`matches input: True`).
+
+### Notes on accuracy
+
+- Real EEG is noisy; the `--band` preprocessing chooses *which* dynamics to embed. `4 30` keeps the
+  main rhythms (used here); `8 13` isolates a clean — but trivially periodic — alpha spiral; omitting
+  `--band` embeds the raw broadband signal (a dense, less interpretable attractor).
+- Keep `--count` modest (~250–600) and prefer the hierarchical (edge) grammar for the step gallery:
+  `parse` re-detects every step, so large trajectories or `--min-order 3` runs are much slower.
+
 ## Repository layout
 
 ```
